@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { orderBy, collection, query, where } from 'firebase/firestore'
+import { orderBy, collection, query } from 'firebase/firestore'
 import Message from './Message'
 import { db } from '../../firebase'
 

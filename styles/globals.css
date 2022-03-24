@@ -16,3 +16,16 @@ a {
 * {
 	box-sizing: border-box;
 }
+
+#nprogress .bar {
+	background: #00a884 !important;
+}
+
+#nprogress .spinner {
+	color: #00a884 !important;
+}
+
+#nprogress .spinner-icon {
+	border-top-color: #00a884 !important;
+	border-left-color: #00a884 !important;
+}

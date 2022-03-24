@@ -8,7 +8,6 @@ import OptionsMenu from '../OptionsMenu'
 import TextInput from '../TextInput'
 
 import ChatCreator from 'components/ChatCreator'
-
 import ChatsList from '../ChatsList'
 
 import { auth } from '../../firebase'

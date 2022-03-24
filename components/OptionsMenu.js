@@ -18,7 +18,6 @@ function OptionsMenu() {
 	const handleLogout = () => {
 		setAnchorEl(null)
 		signOut(auth)
-		router.push('/')
 	}
 
 	return (

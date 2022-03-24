@@ -5,6 +5,10 @@ import { auth, db } from '../firebase'
 import Login from './login'
 import Loading from '../components/Loading'
 import { serverTimestamp, setDoc, doc } from 'firebase/firestore'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+import Router from 'next/router'
 
 function MyApp({ Component, pageProps }) {
 	const [user, loading] = useAuthState(auth)
@@ -23,6 +27,12 @@ function MyApp({ Component, pageProps }) {
 			)
 		}
 	}, [user])
+
+	Router.events.on('routeChangeStart', () => {
+		NProgress.start()
+	})
+	Router.events.on('routeChangeComplete', () => NProgress.done())
+	Router.events.on('routeChangeError', () => NProgress.done())
 
 	if (loading) return <Loading />
 	if (!user) return <Login />

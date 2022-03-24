@@ -2,24 +2,28 @@ import styled from '@emotion/styled'
 import Head from 'next/head'
 import Sidebar from '../../components/Sidebar'
 import ChatScreen from '../../components/ChatScreen'
-import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db, auth } from '../../firebase'
+import { useGetChat } from 'hooks/useGetChat'
+import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
-function Chat({ chat, messages }) {
+function Chat({ messages }) {
+	const router = useRouter()
 	const [user] = useAuthState(auth)
-	const receiverEmail = chat.users.filter((email) => email !== user.email)[0]
+	const { chat } = useGetChat(router.query.id)
+	const recieverUserEmail = chat && chat.users.filter((email) => email !== user.email)[0]
 
 	return (
 		<Container>
 			<Head>
-				<title>Chat with {receiverEmail}</title>
+				<title>Chat with {recieverUserEmail}</title>
 			</Head>
 			<SidebarContainer>
 				<Sidebar />
 			</SidebarContainer>
 			<ChatContainer>
-				<ChatScreen chat={chat} messages={messages} />
+				<ChatScreen messages={messages} recieverUserEmail={recieverUserEmail} />
 			</ChatContainer>
 		</Container>
 	)
@@ -28,8 +32,6 @@ function Chat({ chat, messages }) {
 export default Chat
 
 export async function getServerSideProps(context) {
-	const ref = doc(db, 'chats', context.query.id)
-
 	//PREP the messages on the server
 	const messagesRes = await getDocs(
 		query(collection(db, 'chats', context.query.id, 'messages'), orderBy('timestamp', 'asc'))
@@ -46,16 +48,11 @@ export async function getServerSideProps(context) {
 		}))
 
 	// PREP the chats
-	const chatRes = await getDoc(ref)
-	const chat = {
-		id: chatRes.id,
-		...chatRes.data(),
-	}
 
 	return {
 		props: {
 			messages: JSON.stringify(messages),
-			chat,
+			// chat,
 		},
 	}
 }

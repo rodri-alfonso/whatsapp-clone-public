@@ -4,6 +4,7 @@ import { Button, IconButton } from '@mui/material'
 import { auth, provider } from '../../firebase'
 import { signInWithPopup } from 'firebase/auth'
 import GitHubIcon from '@mui/icons-material/GitHub'
+import Link from 'next/link'
 
 function Login() {
 	const signIn = () => {
@@ -31,7 +32,11 @@ function Login() {
 						</Button>
 					</Information>
 					<GithubButton>
-						<GitHubIcon />
+						<Link href='https://github.com/rodri-alfonso/whatsapp-clone-public'>
+							<a target='_blank' rel='noreferrer'>
+								<GitHubIcon />
+							</a>
+						</Link>
 					</GithubButton>
 				</Content>
 			</Container>

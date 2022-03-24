@@ -46,8 +46,6 @@ function ChatCreator({ open, onClose }) {
 	return (
 		<DrawerMenu
 			sx={{
-				// width: '100%',
-				// width: '36rem',
 				flexShrink: 0,
 			}}
 			variant='persistent'

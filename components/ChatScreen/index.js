@@ -1,22 +1,16 @@
 import styled from '@emotion/styled'
-import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { useRef } from 'react'
 import { Avatar, IconButton } from '@mui/material'
-import { auth } from '../../firebase'
 import { ArrowBackIos } from '@mui/icons-material'
 
 import TimeAgo from 'timeago-react'
 import InputMessage from '../InputMessage'
 import Messages from './Messages'
-import { useRouter } from 'next/router'
 
 import { useGetUserByEmail } from 'hooks/useGetUserByEmail'
 
-function ChatScreen({ chat, messages }) {
-	const [user] = useAuthState(auth)
-	const router = useRouter()
-	const recieverUserEmail = chat.users.filter((email) => email !== user.email)[0]
+function ChatScreen({ messages, recieverUserEmail }) {
 	const { user: recieverUser, recipientSnapshot } = useGetUserByEmail(recieverUserEmail)
 
 	const endOfMessageRef = useRef(null)
@@ -26,36 +20,38 @@ function ChatScreen({ chat, messages }) {
 	}
 
 	return (
-		<Container>
-			<Header>
-				<ButtonBack onClick={() => router.push('/')}>
-					<ArrowBackIos />
-				</ButtonBack>
-				{recieverUser ? <UserAvatar src={recieverUser?.photoURL} /> : <UserAvatar>{recieverUserEmail[0]}</UserAvatar>}
+		recieverUserEmail && (
+			<Container>
+				<Header>
+					<ButtonBack onClick={() => router.push('/')}>
+						<ArrowBackIos />
+					</ButtonBack>
+					{recieverUser ? <UserAvatar src={recieverUser?.photoURL} /> : <UserAvatar>{recieverUserEmail[0]}</UserAvatar>}
 
-				<HeaderInformation>
-					<h3>{recieverUser ? recieverUser?.displayName : recieverUserEmail}</h3>
-					{recipientSnapshot ? (
-						<p>
-							Last active:{' '}
-							{recieverUser?.lastSeen?.toDate() ? (
-								<TimeAgo datetime={recieverUser?.lastSeen?.toDate()} />
-							) : (
-								'Unavailable'
-							)}
-						</p>
-					) : (
-						<p>Loading Last active...</p>
-					)}
-				</HeaderInformation>
-			</Header>
+					<HeaderInformation>
+						<h3>{recieverUser ? recieverUser?.displayName : recieverUserEmail}</h3>
+						{recipientSnapshot ? (
+							<p>
+								Last active:{' '}
+								{recieverUser?.lastSeen?.toDate() ? (
+									<TimeAgo datetime={recieverUser?.lastSeen?.toDate()} />
+								) : (
+									'Unavailable'
+								)}
+							</p>
+						) : (
+							<p>Loading Last active...</p>
+						)}
+					</HeaderInformation>
+				</Header>
 
-			<MessageContainer>
-				<Messages messages={messages} />
-				<EndOfMessage ref={endOfMessageRef} />
-			</MessageContainer>
-			<InputMessage scrollToBottom={scrollToBottom} />
-		</Container>
+				<MessageContainer>
+					<Messages messages={messages} />
+					<EndOfMessage ref={endOfMessageRef} />
+				</MessageContainer>
+				<InputMessage scrollToBottom={scrollToBottom} />
+			</Container>
+		)
 	)
 }
 
